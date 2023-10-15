@@ -11,7 +11,7 @@ spark.conf.set(
 df=spark.read.parquet(uri+"Output/Parquet")
 csvDataFile = spark.read.csv(uri+'Output/CustMeter.csv', header=True)
 
-# COMMAND ----------
+
 
 # 1. What's the total electrical usage for the day?
 from pyspark.sql import functions as F
@@ -19,18 +19,18 @@ sum_result = df.select(F.sum("IntervalValue")).first()[0]
 print("1. What's the total electrical usage for the day?")
 print(sum_result)
 
-#What's the total electrical usage for the day?
-#117867.07430000443
+# What's the total electrical usage for the day?
+# 117867.07430000443
 
-# COMMAND ----------
 
-#2. What's the total electrical usage for 'Residental' customers for the day?
+
+# 2. What's the total electrical usage for 'Residental' customers for the day?
 residentialUsage = df.filter(df["ServiceType"] == "Residential").agg(F.sum("IntervalValue")).collect()[0][0]
 print("2. What's the total electrical usage for 'Residental' customers for the day?")
 display(residentialUsage)
 
-#What's the total electrical usage for 'Residental' customers #for the day?
-#103003.62940000501
+# What's the total electrical usage for 'Residental' customers #for the day?
+# 103003.62940000501
 
 # COMMAND ----------
 
@@ -39,8 +39,8 @@ seventhHourUsage = df.filter(df["IntervalHour"] == "7").agg(F.sum("IntervalValue
 print("3. What's the total electrical usage for hour 7 of the day?")
 display(seventhHourUsage)
 
-#What's the total electrical usage for hour 7 of the day?
-#Answer:4538.916000000025
+# What's the total electrical usage for hour 7 of the day?
+# Answer:4538.916000000025
 
 # COMMAND ----------
 
@@ -54,24 +54,19 @@ top_meters_list = top_5_meters.collect()
 print("The below table displays the top five meters with highest total usage value")
 display(top_meters_list)
 
-#Meter Number	TotalUsage
-#13273207	1619.2049000000002
-#10264378	1601.676
-#12461706	1429.8359999999998
-#10264358	1376.5860000000002
-#10264370	1341.9899999999998
+# Meter Number	TotalUsage
+# 13273207	1619.2049000000002
+# 10264378	1601.676
+# 12461706	1429.8359999999998
+# 10264358	1376.5860000000002
+# 10264370	1341.9899999999998
 
 
-
-# COMMAND ----------
-
-#5. Which hour had the most usage for the day and what was the total electrical usage?
-
-
+# 5. Which hour had the most usage for the day and what was the total electrical usage?
 filtered_data = df.select("IntervalHour", df["IntervalValue"].cast(IntegerType()).alias("IntervalValue"))
 
 hourly_usage = filtered_data.groupBy("IntervalHour").agg(sum("IntervalValue").alias("TotalUsage"))
-# display(hourly_usage)
+
 # Find the hour with the highest total usage
 max_hour = hourly_usage.select("IntervalHour").filter(hourly_usage["TotalUsage"] == hourly_usage.agg(max("TotalUsage")).collect()[0][0]).collect()[0][0]
 
@@ -81,19 +76,17 @@ print("5. Which hour had the most usage for the day and what was the total elect
 print("The hour with maximum usage is: "+str(max_hour))
 print("The total energy usage was : "+str(max_usage))
 
-#5. Which hour had the most usage for the day and what was the #total electrical usage?
-#The hour with maximum usage is: 21
-#The total energy usage was : 4776
+# 5. Which hour had the most usage for the day and what was the #total electrical usage?
+# The hour with maximum usage is: 21
+# The total energy usage was : 4776
 
-
-# COMMAND ----------
 
 # The databricks is reading the parquet file which is split into two different files
-#6. How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?  
+# 6. How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?
 countParquet=df.select("Meter Number").distinct().count()
 countCustMeter=csvDataFile.select("Meter Number").distinct().count()
 print("6.How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?")
 print(countCustMeter-countParquet)
 
-#6.How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?
-#Answer: 234
+# 6.How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?
+# Answer: 234
