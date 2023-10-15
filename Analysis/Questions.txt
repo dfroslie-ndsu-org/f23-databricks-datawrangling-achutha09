@@ -30,5 +30,6 @@ Answer: There are 234 meters in CustMeter.csv dataset that didn't have any valid
 
 
 7. How many Custmer Acount Number / Meter Number / Data Type combinations have some data in the cleaned file but not all?
+Answer: 0 
 
 
