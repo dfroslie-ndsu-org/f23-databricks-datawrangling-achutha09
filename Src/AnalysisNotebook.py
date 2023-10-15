@@ -9,7 +9,7 @@ spark.conf.set(
     "fs.azure.account.key." + storage_end_point,
     dbutils.secrets.get(scope=my_scope, key=my_key))
 df=spark.read.parquet(uri+"Output/Parquet")
-csvDataFile = spark.read.csv(uri+'Output/CustMeter.csv', header=True)
+csvDataFile = spark.read.csv(uri+'Output/CustomerData/CustMeter.csv', header=True)
 
 
 
@@ -80,6 +80,7 @@ print("The total energy usage was : "+str(max_usage))
 # The hour with maximum usage is: 21
 # The total energy usage was : 4776
 
+# COMMAND ----------
 
 # The databricks is reading the parquet file which is split into two different files
 # 6. How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?
