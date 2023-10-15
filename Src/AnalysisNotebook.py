@@ -1,6 +1,7 @@
 # Databricks notebook source
 from pyspark.sql.functions import sum, max
 from pyspark.sql.types import IntegerType
+from pyspark.sql.functions import col
 uri = "abfss://assign1@achuthastorage.dfs.core.windows.net/"
 storage_end_point = "achuthastorage.dfs.core.windows.net"
 my_scope = "databricksSecretScope"
@@ -13,6 +14,8 @@ csvDataFile = spark.read.csv(uri+'Output/CustomerData/CustMeter.csv', header=Tru
 
 
 
+# COMMAND ----------
+
 # 1. What's the total electrical usage for the day?
 from pyspark.sql import functions as F
 sum_result = df.select(F.sum("IntervalValue")).first()[0]
@@ -22,7 +25,7 @@ print(sum_result)
 # What's the total electrical usage for the day?
 # 117867.07430000443
 
-
+# COMMAND ----------
 
 # 2. What's the total electrical usage for 'Residental' customers for the day?
 residentialUsage = df.filter(df["ServiceType"] == "Residential").agg(F.sum("IntervalValue")).collect()[0][0]
@@ -44,7 +47,7 @@ display(seventhHourUsage)
 
 # COMMAND ----------
 
-# Find the top 5 meters with the highest total usage
+# 4. Find the top 5 meters with the highest total usage
 meter_usage = df.groupBy("Meter Number").agg(F.sum("IntervalValue").alias("TotalUsage"))
 top_5_meters = meter_usage.orderBy(F.desc("TotalUsage")).limit(5)
 
@@ -61,6 +64,7 @@ display(top_meters_list)
 # 10264358	1376.5860000000002
 # 10264370	1341.9899999999998
 
+# COMMAND ----------
 
 # 5. Which hour had the most usage for the day and what was the total electrical usage?
 filtered_data = df.select("IntervalHour", df["IntervalValue"].cast(IntegerType()).alias("IntervalValue"))
@@ -91,3 +95,15 @@ print(countCustMeter-countParquet)
 
 # 6.How many meters are in CustMeter.csv dataset that didn't have any valid readings for the day after cleaning the data?
 # Answer: 234
+
+# COMMAND ----------
+
+# 7. How many Custmer Acount Number / Meter Number / Data Type combinations have some data in the cleaned file but not all?
+
+df1 = df.filter((col("Customer Account Number") != "") | (col("Meter Number") != "") | (col("Data Type") != ""))
+df2 = df1.filter(
+    ~((col("Customer Account Number") != "") & (col("Meter Number") != "") & (col("Data Type") != ""))
+)
+count = df2.count()
+
+print("How many Custmer Acount Number / Meter Number / Data Type combinations have some data in the cleaned file but not all: ", count)
