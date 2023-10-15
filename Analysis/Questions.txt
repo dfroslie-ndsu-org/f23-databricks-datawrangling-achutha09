@@ -3,8 +3,8 @@ You should have one notebook cell for each question below.  Each question is wor
 1. What's the total electrical usage for the day?
 Ans: The total electrical usage for the day : 117867.07430000443
 
-2. What's the total electrical usage for 'Residental' customers for the day?
-Ans: The total electrical usage for 'Residental' customers for the day:
+2. What's the total electrical usage for 'Residential' customers for the day?
+Ans: The total electrical usage for 'Residential' customers for the day:
 103003.62940000501
 
 3. What's the total electrical usage for hour 7 of the day?
@@ -13,7 +13,7 @@ Ans: The total electrical usage for hour 7 of the day: 4538.916000000025
 4. What are the top 5 meters in terms of usage for the day and how much power did they use?
 Ans:  Below are the top 5 meters in terms of usage for the day and how much power did they use:
 
-      Meter Number   	      TotalUsage
+      Meter Number   	      TotalUsage (IntervalValue)
         13273207	       1619.2049000000002
         10264378	       1601.676
         12461706	       1429.8359999999998
